@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.springex.mapper.TodoMapper">
+    <select id="getTime" resultType="string">
+        SELECT NOW()
+    </select>
+    <!-- 등록 처리 -->
+    <insert id="insert">
+        INSERT INTO tbl_todo(title, dueDate, writer) VALUES (#{title}, #{dueDate}, #{writer})
+    </insert>
+    <!-- 목록 -->
+    <select id="selectAll" resultType="org.zerock.springex.domain.TodoVO">
+        SELECT * FROM tbl_todo ORDER BY tno DESC
+    </select>
+    <!-- 조회 -->
+    <select id="selectOne" resultType="org.zerock.springex.domain.TodoVO">
+        SELECT * FROM tbl_todo WHERE tno = #{tno}
+    </select>
+    <!-- 삭제 -->
+    <delete id="delete">
+        DELETE FROM tbl_todo where tno = #{tno}
+    </delete>
+    <!-- 수정 -->
+    <update id="update">
+         UPDATE tbl_todo SET title=#{title}, dueDate = #{dueDate}, finished = #{finished} WHERE tno = #{tno}
+    </update>
+    <!-- 페이징 처리 -->
+<!--    <select id="selectList" resultType="org.zerock.springex.domain.TodoVO">-->
+<!--        SELECT * FROM tbl_todo ORDER BY tno DESC LIMIT #{skip}, #{size}-->
+<!--    </select>-->
+    <!-- 전체 페이지 수 -->
+<!--    <select id="getCount" resultType="int">-->
+<!--        SELECT count(tno) from tbl_todo-->
+<!--    </select>-->
+    <!-- 타입에 따른 검색 리스트 -->
+<!--    <select id="selectList" resultType="org.zerock.springex.domain.TodoVO">-->
+<!--        SELECT * FROM tbl_todo-->
+<!--            <where>-->
+<!--                <if test="types != null and  types.length > 0">-->
+<!--                    <foreach collection="types" item="type" open="(" close=")" separator=" OR ">-->
+<!--                        <if test="type == 't'.toString()">-->
+<!--                            title LIKE CONCAT('%', #{keyword}, '%')-->
+<!--                        </if>-->
+<!--                        <if test="type == 'w'.toString()">-->
+<!--                            writer LIKE CONCAT('%', #{keyword}, '%')-->
+<!--                        </if>-->
+<!--                    </foreach>-->
+<!--                </if>-->
+<!--                 <if test="finished">-->
+<!--                     <trim prefix="and">-->
+<!--                         finished = 1-->
+<!--                     </trim>-->
+<!--                 </if>-->
+<!--                 <if test="from != null and to != null">-->
+<!--                     <trim prefix="and">-->
+<!--                         dueDate between #{from} and #{to}-->
+<!--                     </trim>-->
+<!--                 </if>-->
+<!--            </where>-->
+<!--        ORDER BY tno DESC LIMIT #{skip}, #{size}-->
+<!--    </select>-->
+
+    <sql id="search">
+        <where>
+            <if test="types != null and  types.length > 0">
+                <foreach collection="types" item="type" open="(" close=")" separator=" OR">
+                    <if test="type == 't'.toString()">
+                        title LIKE CONCAT('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'w'.toString()">
+                        writer LIKE CONCAT('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+
+            <if test="finished">
+                <trim prefix="and">
+                    finished = 1
+                </trim>
+            </if>
+
+            <if test="from != null and to != null">
+                <trim prefix="and">
+                    dueDate BETWEEN #{from} and #{to}
+                </trim>
+            </if>
+        </where>
+    </sql>
+    <!-- 타입에 따른 검색 리스트 -->
+    <select id="selectList" resultType="org.zerock.springex.domain.TodoVO">
+        SELECT * FROM tbl_todo
+        <include refid="search"></include>
+        ORDER BY tno DESC LIMIT #{skip}, #{size}
+    </select>
+    <!-- 전체 페이지 수 -->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(tno) FROM tbl_todo
+        <include refid="search"></include>
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Log4j2 설정-->
+<Configuration status="WARN">
+    <!-- 로그를 어떤 방식으로 기록할지 설정 -->
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5Level %logger{36} - %msg%n" />
+        </Console>
+    </Appenders>
+    <!-- 로그의 중요도 설정-->
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>

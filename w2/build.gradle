@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'org.zerock'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.9.2'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    //MairaDB 의존성 추가
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.0.4'
+
+    //Lombok 의존성 추가
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+
+    //HikariCP 의존성 추가
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
+
+    //ModelMapper 의존성 추가
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.0.0'
+
+    //Log4j2 의존성 추가
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.2'
+
+    //JSTL 의존성 추가
+    implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+}
+
+test {
+    useJUnitPlatform()
+}
